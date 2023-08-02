@@ -11,23 +11,31 @@
 using namespace std;
 
 
-bool ReadFile(string "student.txt", List *list){
-	//open file
-	ifstream file("student.txt");
-	if(!file){
-		cout <<"File not found!"<< endl;
+bool ReadFile(const std::string& filename , List& studentRecord, int lineNumber){
+	LibStudent studentDetail;
+	
+	ifstream file(filename);
+	
+	if(!file.is_open()) {
+		cout <<"Fail to open the file: " << filename << endl;
 		return false;
 	}
-	//read file into linked list
-	while(!file.eof()){
-		int num;
-		file >> num;
-		list->push_back(num);
+
+	string line;
+	int lineAmount = 1;
+	while (getline(file, line) && lineAmount <= lineNumber) {
+		//Insert each record into a a node
+		if(!studentRecord.insert(1, studentDetail)){
+			cout << "Fail to insert student details" << lineNumber << "into the record" << endl;
+			file.close();
+			return false;
+		}
+		lineAmount++;
 	}
 	file.close();
+	cout <<"Student details successfully recroded" << endl;
 	return true;
-
-};
+}
 bool DeleteRecord(List *, char *);
 bool Display(List, int, int);
 bool InsertBook(string, List *);
