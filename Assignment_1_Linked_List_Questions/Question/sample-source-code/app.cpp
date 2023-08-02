@@ -1,3 +1,4 @@
+#define     _CRT_SECURE_NO_WARNINGS
 #include	<iostream>
 #include	<cstdlib>
 #include	<cstdio>
@@ -6,16 +7,16 @@
 #include	"List.h"
 #include    "LibStudent.h"
 #include    "LibBook.h"
+#include	<unordered_set>
 
 
 using namespace std;
 
-
 bool ReadFile(const std::string& filename , List& studentRecord, int lineNumber){
 	LibStudent studentDetail;
-	
+
 	ifstream file(filename);
-	
+
 	if(!file.is_open()) {
 		cout <<"Fail to open the file: " << filename << endl;
 		return false;
@@ -36,6 +37,7 @@ bool ReadFile(const std::string& filename , List& studentRecord, int lineNumber)
 	cout <<"Student details successfully recroded" << endl;
 	return true;
 }
+
 bool DeleteRecord(List *, char *);
 bool Display(List, int, int);
 bool InsertBook(string, List *);
@@ -47,7 +49,11 @@ int menu();
 
 
 int main() {
-	
+	List LibStudent;
+
+	string filename = "student.txt";
+	ReadFile("student.txt", LibStudent, 4);
+
 
 
 	
@@ -56,7 +62,3 @@ int main() {
 	system("pause");
 	return 0;
 }
-
-
-
-
