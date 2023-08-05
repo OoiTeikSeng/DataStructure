@@ -116,9 +116,9 @@ int main() {
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
 	Node* current = list->head;
 	while (current != nullptr) {
-		if (strcmp(current->item.id, id) == 0) {
-			stu = current->item;
-			return true;	//If found return true and return the student information
+		if (strcmp(current->item.id, id) == 0) {	//If found, return true
+			stu = current->item;	 //return the student information using stu
+			return true;
 		}
 		current = current->next;
 	}
@@ -129,7 +129,7 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 bool computeAndDisplayStatistics(List* list) {
 	if (list->empty()) {
 		cout << "List is empty." << endl;
-		return false;
+		return false;	//return false for empty list
 	}
 
 	// Initialize variables to store statistics for each course.
@@ -141,7 +141,6 @@ bool computeAndDisplayStatistics(List* list) {
 	// Traverse the linked list to gather statistics for each course.
 	Node* current = list->head;
 	while (current != nullptr) {
-		// Based on the course, update the corresponding statistics.
 		if (strcmp(current->item.course, "CS") == 0) {
 			csStudents++;
 			csBooks += current->item.totalbook;
