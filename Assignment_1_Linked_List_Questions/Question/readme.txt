@@ -17,3 +17,32 @@ Practical Group:
 Practical Session: 
 Tutor:
 
+
+Group Member 3:
+
+Name: 
+Student ID:
+Course:
+Practical Group: 
+Practical Session: 
+Tutor:
+
+
+Group Member 4:
+
+Name: 
+Student ID:
+Course:
+Practical Group: 
+Practical Session: 
+Tutor:
+
+
+Group Member 5:
+
+Name: LAW WAI CHUN
+Student ID: 2105197
+Course: CN
+Practical Group: 1
+Practical Session: Monday, 12PM - 2PM
+Tutor: Mr.Sor Kean Vee
