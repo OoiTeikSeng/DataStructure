@@ -90,8 +90,7 @@ int main() {
 	inFile.close();
 
 	// Search for a student in the linked list based on their id
-	//Ask the user to enter the student ID to be searched	
-	cout << "Enter the Student ID to search: ";
+	cout << "Enter the Student ID to search: ";		//Ask the user to enter the student ID to be searched	
 	cin >> stu.id;
 
 	if (SearchStudent(&studentList, stu.id, stu)) {	
@@ -104,7 +103,7 @@ int main() {
 
 	
 	//Law Wai CHun bool computeAndDisplayStatistics
-	//if user input the following input, then call this function
+	//if user want to call this function, input their choice, then call this function
 		computeAndDisplayStatistics(&studentList);
 
 
