@@ -39,7 +39,7 @@ bool ReadFile(const std::string& filename , List& studentRecord, int lineNumber)
 	return true;
 }
 
-// Function to find and delete students based on student id
+// ng jian nian function to find and delete students based on student id
 bool DeleteRecord(List *list, char *student_id) {
     if (isEmpty(list)) {
         return false; // list is empty
@@ -56,6 +56,13 @@ bool DeleteRecord(List *list, char *student_id) {
     
     return false; // no student found
 }
+
+bool InsertBook(char *filename, LibStudent *student) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        // Handle file open errors
+        return false;
+    }
 bool DeleteRecord(List *, char *);
 bool Display(List, int, int);
 bool InsertBook(string, List *);
