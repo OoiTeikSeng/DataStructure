@@ -44,7 +44,7 @@ bool DeleteRecord(List *list, char *student_id) {
     if (isEmpty(list)) {
         return false; // list is empty
     }
-
+// ng jian nian function to find borrowed due date
     for (int i = 1; i <= list->count; i++) {
         student *student = &list->find(i)->item; // this line needs to be fixed
 
@@ -56,7 +56,7 @@ bool DeleteRecord(List *list, char *student_id) {
     
     return false; // no student found
 }
-
+ 
 bool InsertBook(char *filename, LibStudent *student) {
     FILE *file = fopen(filename, "r");
     if (file == NULL) {
@@ -88,6 +88,26 @@ int main() {
 	ifstream inFile("student.txt");
 	if (!inFile) {
 		cout << "Error opening the file." << endl;
+
+	//ng jian nian bool InsertBook
+	bool success = InsertBook("book.txt", &student);
+    if (success) {
+        printf("Books inserted successfully\n");
+        printf("Student ID: %s\n", student.id);
+        printf("Student Name: %s\n", student.name);
+        printf("Total Fine: RM%.2f\n", student.totalFine);
+
+        printf("Borrowed Books:\n");
+        for (int i = 0; i < student.bookCount; i++) {
+            printf("Book Title: %s\n", student.books[i].title);
+            printf("Book Author: %s\n", student.books[i].author);
+            printf("Due Date: %d/%d/%d\n", student.books[i].dueDay, student.books[i].dueMonth, student.books[i].dueYear);
+            printf("Fine: RM%.2f\n", student.books[i].fine);
+            printf("\n");
+        }
+    } else {
+        printf("Error inserting books\n");
+    }
 		return 1;
 	}
 
