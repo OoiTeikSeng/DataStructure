@@ -58,7 +58,7 @@ bool DeleteRecord(List *list, char *student_id) {
 }
  
 bool InsertBook(char *filename, LibStudent *student) {
-    FILE *file = fopen(filename, "r");
+    FILE *file = fopen(student_booklist.txt, "r");
     if (file == NULL) {
         // Handle file open errors
         return false;
