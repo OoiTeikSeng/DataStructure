@@ -13,30 +13,49 @@
 
 using namespace std;
 
-bool ReadFile(const std::string& filename , List& studentRecord, int lineNumber){
-	LibStudent studentDetail;
+bool ReadFile(const std::string& filename, List& studentRecord, int lineNumber) {
+    ifstream file(filename);
 
-	ifstream file(filename);
+    if (!file.is_open()) {
+        cout << "Fail to open the file: " << filename << endl;
+        return false;
+    }
+    else {
+        string line;
+        int lineAmount = 1;
 
-	if(!file.is_open()) {
-		cout <<"Fail to open the file: " << filename << endl;
-		return false;
-	}
+        while (getline(file, line) && lineAmount <= lineNumber) {
+            LibStudent studentDetail;
 
-	string line;
-	int lineAmount = 1;
-	while (getline(file, line) && lineAmount <= lineNumber) {
-		//Insert each record into a a node
-		if(!studentRecord.insert(1, studentDetail)){
-			cout << "Fail to insert student details" << lineNumber << "into the record" << endl;
-			file.close();
-			return false;
-		}
-		lineAmount++;
-	}
-	file.close();
-	cout <<"Student details successfully recroded" << endl;
-	return true;
+            // Parse the line and extract student details into studentDetail
+
+            // Check if the student details have been encountered before
+            Node* cur = studentRecord.head;  // Assuming the head member is public
+            bool isDuplicate = false;
+            while (cur != nullptr) {
+                if (cur->studentDetail == studentDetail) {
+                    cout << "Duplicate student details found at line " << lineNumber << ". Skipping." << endl;
+                    isDuplicate = true;
+                    break;
+                }
+                cur = cur->next;
+            }
+
+            if (!isDuplicate) {
+                // Insert the record into the list
+                if (!studentRecord.insert(1, studentDetail)) {
+                    cout << "Fail to insert student details from line " << lineNumber << " into the record." << endl;
+                    file.close();
+                    return false;
+                }
+            }
+
+            lineAmount++;
+        }
+        file.close();
+        cout << "Student details successfully recorded." << endl;
+        return true;
+    }
 }
 
 // ng jian nian function to find and delete students based on student id
