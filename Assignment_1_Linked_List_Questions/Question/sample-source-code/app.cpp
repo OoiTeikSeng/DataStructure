@@ -70,7 +70,25 @@ bool SearchStudent(List *, char *id, LibStudent &);
 bool computeAndDisplayStatistics(List *);
 bool printStuWithSameBook(List *, char *);
 bool displayWarnedStudent(List *, List *, List *);
-int menu();
+
+//Lim Kai Xian's menu function
+int menu() {
+	int choice;
+	cout << "Menu\n";
+	cout << endl;
+	cout << "1. Read file." << endl;
+	cout << "2. Search student," << endl;
+	cout << "3. Search student." << endl;
+	cout << "4. Insert book." << endl;
+	cout << "5. Display output." << endl;
+	cout << "6. Compute and Display Statistics." << endl;
+	cout << "7. Student with Same Book." << endl;
+	cout << "8. Display Warned Student." << endl;
+	cout << "9. Exit." << endl;
+	cout << "Enter your choice: ";
+	cin >> choice;
+	return choice;
+}
 
 
 int main() {
@@ -246,21 +264,3 @@ bool computeAndDisplayStatistics(List* list) {
 	return true;
 }
 
-//Lim Kai Xian's menu function
-int menu() {
-	int choice;
-	cout << "Menu\n";
-	cout << endl;
-	cout << "1. Read file." << endl;
-	cout << "2. Search student," << endl;
-	cout << "3. Search student." << endl;
-	cout << "4. Insert book." << endl;
-	cout << "5. Display output." << endl;
-	cout << "6. Compute and Display Statistics." << endl;
-	cout << "7. Student with Same Book." << endl;
-	cout << "8. Display Warned Student." << endl;
-	cout << "9. Exit." << endl;
-	cout << "Enter your choice: ";
-	cin >> choice;
-	return choice;
-}
