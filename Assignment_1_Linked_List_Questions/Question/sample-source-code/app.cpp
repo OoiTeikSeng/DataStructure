@@ -63,11 +63,96 @@ bool InsertBook(char *filename, LibStudent *student) {
         // Handle file open errors
         return false;
     }
+//Law Wai Chun computeAndDisplayStatistics function definition
+bool computeAndDisplayStatistics(List* list) {
+	if (list->empty()) {
+		cout << "List is empty." << endl;
+		return false;	//return false for empty list
+	}
+
+	// Initialize variables to store statistics for each course.
+	int csStudents = 0, iaStudents = 0, ibStudents = 0, cnStudents = 0, ctStudents = 0;
+	int csBooks = 0, iaBooks = 0, ibBooks = 0, cnBooks = 0, ctBooks = 0;
+	int csOverdueBooks = 0, iaOverdueBooks = 0, ibOverdueBooks = 0, cnOverdueBooks = 0, ctOverdueBooks = 0;
+	double csOverdueFine = 0.0, iaOverdueFine = 0.0, ibOverdueFine = 0.0, cnOverdueFine = 0.0, ctOverdueFine = 0.0;
+
+	// Traverse the linked list to gather statistics for each course.
+	Node* current = list->head;
+	while (current != nullptr) {
+		if (strcmp(current->item.course, "CS") == 0) {
+			csStudents++;
+			csBooks += current->item.totalbook;
+			csOverdueBooks += current->item.totalbook - current->item.total_fine;
+			csOverdueFine += current->item.total_fine;
+		}
+		else if (strcmp(current->item.course, "IA") == 0) {
+			iaStudents++;
+			iaBooks += current->item.totalbook;
+			iaOverdueBooks += current->item.totalbook - current->item.total_fine;
+			iaOverdueFine += current->item.total_fine;
+		}
+		else if (strcmp(current->item.course, "IB") == 0) {
+			ibStudents++;
+			ibBooks += current->item.totalbook;
+			ibOverdueBooks += current->item.totalbook - current->item.total_fine;
+			ibOverdueFine += current->item.total_fine;
+		}
+		else if (strcmp(current->item.course, "CN") == 0) {
+			cnStudents++;
+			cnBooks += current->item.totalbook;
+			cnOverdueBooks += current->item.totalbook - current->item.total_fine;
+			cnOverdueFine += current->item.total_fine;
+		}
+		else if (strcmp(current->item.course, "CT") == 0) {
+			ctStudents++;
+			ctBooks += current->item.totalbook;
+			ctOverdueBooks += current->item.totalbook - current->item.total_fine;
+			ctOverdueFine += current->item.total_fine;
+		}
+
+		current = current->next;
+	}
+
+	// Print the statistics in table format.
+	cout << left << setw(10) << "Course" << setw(20) << "Number of Students" << setw(23) << "Total Books Borrowed"
+		<< setw(23) << "Total Overdue Books" << setw(25) << "Total Overdue Fine (RM)" << endl;
+
+	cout << right << setw(4) << "CS" << setw(15) << csStudents << setw(22) << csBooks << setw(21) << csOverdueBooks
+		<< setw(28) << setprecision(2) << fixed << csOverdueFine << endl;
+
+	cout << right << setw(4) << "IA" << setw(15) << iaStudents << setw(22) << iaBooks << setw(21) << iaOverdueBooks
+		<< setw(28) << setprecision(2) << fixed << iaOverdueFine << endl;
+
+	cout << right << setw(4) << "IB" << setw(15) << ibStudents << setw(22) << ibBooks << setw(21) << ibOverdueBooks
+		<< setw(28) << setprecision(2) << fixed << ibOverdueFine << endl;
+
+	cout << right << setw(4) << "CN" << setw(15) << cnStudents << setw(22) << cnBooks << setw(21) << cnOverdueBooks
+		<< setw(28) << setprecision(2) << fixed << cnOverdueFine << endl;
+
+	cout << right << setw(4) << "CT" << setw(15) << ctStudents << setw(22) << ctBooks << setw(21) << ctOverdueBooks
+		<< setw(28) << setprecision(2) << fixed << ctOverdueFine << endl;
+
+	return true;
+}
+
+//Law Wai Chun SearchStudent function definition
+bool SearchStudent(List* list, char* id, LibStudent& stu) {
+	Node* current = list->head;
+	while (current != nullptr) {
+		if (strcmp(current->item.id, id) == 0) {	//If found, return true
+			stu = current->item;	 //return the student information using stu
+			return true;
+		}
+		current = current->next;
+	}
+	return false;
+}
+
+
+
 bool DeleteRecord(List *, char *);
 bool Display(List, int, int);
 bool InsertBook(string, List *);
-bool SearchStudent(List *, char *id, LibStudent &);
-bool computeAndDisplayStatistics(List *);
 bool printStuWithSameBook(List *, char *);
 bool displayWarnedStudent(List *, List *, List *);
 
@@ -179,88 +264,3 @@ int main() {
 			cin >> choice;
 			return choice;
 }
-//Law Wai Chun SearchStudent function definition
-bool SearchStudent(List* list, char* id, LibStudent& stu) {
-	Node* current = list->head;
-	while (current != nullptr) {
-		if (strcmp(current->item.id, id) == 0) {	//If found, return true
-			stu = current->item;	 //return the student information using stu
-			return true;
-		}
-		current = current->next;
-	}
-	return false;
-}
-
-//Law Wai Chun computeAndDisplayStatistics function definition
-bool computeAndDisplayStatistics(List* list) {
-	if (list->empty()) {
-		cout << "List is empty." << endl;
-		return false;	//return false for empty list
-	}
-
-	// Initialize variables to store statistics for each course.
-	int csStudents = 0, iaStudents = 0, ibStudents = 0, cnStudents = 0, ctStudents = 0;
-	int csBooks = 0, iaBooks = 0, ibBooks = 0, cnBooks = 0, ctBooks = 0;
-	int csOverdueBooks = 0, iaOverdueBooks = 0, ibOverdueBooks = 0, cnOverdueBooks = 0, ctOverdueBooks = 0;
-	double csOverdueFine = 0.0, iaOverdueFine = 0.0, ibOverdueFine = 0.0, cnOverdueFine = 0.0, ctOverdueFine = 0.0;
-
-	// Traverse the linked list to gather statistics for each course.
-	Node* current = list->head;
-	while (current != nullptr) {
-		if (strcmp(current->item.course, "CS") == 0) {
-			csStudents++;
-			csBooks += current->item.totalbook;
-			csOverdueBooks += current->item.totalbook - current->item.total_fine;
-			csOverdueFine += current->item.total_fine;
-		}
-		else if (strcmp(current->item.course, "IA") == 0) {
-			iaStudents++;
-			iaBooks += current->item.totalbook;
-			iaOverdueBooks += current->item.totalbook - current->item.total_fine;
-			iaOverdueFine += current->item.total_fine;
-		}
-		else if (strcmp(current->item.course, "IB") == 0) {
-			ibStudents++;
-			ibBooks += current->item.totalbook;
-			ibOverdueBooks += current->item.totalbook - current->item.total_fine;
-			ibOverdueFine += current->item.total_fine;
-		}
-		else if (strcmp(current->item.course, "CN") == 0) {
-			cnStudents++;
-			cnBooks += current->item.totalbook;
-			cnOverdueBooks += current->item.totalbook - current->item.total_fine;
-			cnOverdueFine += current->item.total_fine;
-		}
-		else if (strcmp(current->item.course, "CT") == 0) {
-			ctStudents++;
-			ctBooks += current->item.totalbook;
-			ctOverdueBooks += current->item.totalbook - current->item.total_fine;
-			ctOverdueFine += current->item.total_fine;
-		}
-
-		current = current->next;
-	}
-
-	// Print the statistics in table format.
-	cout << left << setw(10) << "Course" << setw(20) << "Number of Students" << setw(23) << "Total Books Borrowed"
-		<< setw(23) << "Total Overdue Books" << setw(25) << "Total Overdue Fine (RM)" << endl;
-
-	cout << right << setw(4) << "CS" << setw(15) << csStudents << setw(22) << csBooks << setw(21) << csOverdueBooks
-		<< setw(28) << setprecision(2) << fixed << csOverdueFine << endl;
-
-	cout << right << setw(4) << "IA" << setw(15) << iaStudents << setw(22) << iaBooks << setw(21) << iaOverdueBooks
-		<< setw(28) << setprecision(2) << fixed << iaOverdueFine << endl;
-
-	cout << right << setw(4) << "IB" << setw(15) << ibStudents << setw(22) << ibBooks << setw(21) << ibOverdueBooks
-		<< setw(28) << setprecision(2) << fixed << ibOverdueFine << endl;
-
-	cout << right << setw(4) << "CN" << setw(15) << cnStudents << setw(22) << cnBooks << setw(21) << cnOverdueBooks
-		<< setw(28) << setprecision(2) << fixed << cnOverdueFine << endl;
-
-	cout << right << setw(4) << "CT" << setw(15) << ctStudents << setw(22) << ctBooks << setw(21) << ctOverdueBooks
-		<< setw(28) << setprecision(2) << fixed << ctOverdueFine << endl;
-
-	return true;
-}
-
