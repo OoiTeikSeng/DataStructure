@@ -179,10 +179,7 @@ void ReadStudentData(List& studentList, const char* filename) {
 	inFile.close();
 }
 
-
-bool DeleteRecord(List *, char *);
 bool Display(List, int, int);
-bool InsertBook(string, List *);
 bool printStuWithSameBook(List *, char *);
 bool displayWarnedStudent(List *, List *, List *);
 
