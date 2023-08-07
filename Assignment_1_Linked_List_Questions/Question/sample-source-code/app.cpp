@@ -74,86 +74,92 @@ int menu();
 
 
 int main() {
-	List LibStudent;
-	
-	string filename = "student.txt";
-	ReadFile("student.txt", LibStudent, 4);
+	int choice;
 
-	
-	//Law Wai Chun bool SearchStudent
-	List studentList; // Created a List object.
-	LibStudent stu;  // Return the student information using stu
+	do {
+		choice = menu();
 
-	// Reading student data from the "student.txt" file and populating the studentList.
-	ifstream inFile("student.txt");
-	if (!inFile) {
-		cout << "Error opening the file." << endl;
+		if (choice == 1) {  //User enter 1 to READ FILE
+			List LibStudent;
 
-	//ng jian nian bool InsertBook
-	bool success = InsertBook("book.txt", &student);
-    if (success) {
-        printf("Books inserted successfully\n");
-        printf("Student ID: %s\n", student.id);
-        printf("Student Name: %s\n", student.name);
-        printf("Total Fine: RM%.2f\n", student.totalFine);
-
-        printf("Borrowed Books:\n");
-        for (int i = 0; i < student.bookCount; i++) {
-            printf("Book Title: %s\n", student.books[i].title);
-            printf("Book Author: %s\n", student.books[i].author);
-            printf("Due Date: %d/%d/%d\n", student.books[i].dueDay, student.books[i].dueMonth, student.books[i].dueYear);
-            printf("Fine: RM%.2f\n", student.books[i].fine);
-            printf("\n");
-        }
-    } else {
-        printf("Error inserting books\n");
-    }
-		return 1;
-	}
-
-	while (!inFile.eof()) {
-		LibStudent student;
-		char line[100];
-		inFile.getline(line, sizeof(line));
-
-		if (strstr(line, "Student Id = ") != nullptr) {
-			sscanf(line, "Student Id = %s", student.id);
-			inFile.getline(line, sizeof(line)); // Read the name, Skip the line.
-			sscanf(line, "Name = %[^\n]", student.name);
-			inFile.getline(line, sizeof(line)); // Read the course.
-			sscanf(line, "course = %s", student.course);
-			inFile.getline(line, sizeof(line)); // Read the phone number.
-			sscanf(line, "Phone Number = %[^\n]", student.phone_no);
-
-			// Assuming implemented here the code to populate the 'book' array.
-
-			studentList.insert(student);
+			string filename = "student.txt";
+			ReadFile("student.txt", LibStudent, 4);
 		}
-	}
+		else if (choice == 2) {  //User enter 2 to DELETE RECORD
+			DeleteRecord(LibStudent, 4);
+		}
+		else if (choice == 3) {  //User enter 3 to SEARCH STUDENT
+			//Law Wai Chun bool SearchStudent
+			List studentList; // Created a List object.
+			LibStudent stu;  // Return the student information using stu
 
-	inFile.close();
+			// Reading student data from the "student.txt" file and populating the studentList.
+			ifstream inFile("student.txt");
+			if (!inFile) {
+				cout << "Error opening the file." << endl;
+				return 1;
+			}
 
-	// Search for a student in the linked list based on their id
-	cout << "Enter the Student ID to search: ";		//Ask the user to enter the student ID to be searched	
-	cin >> stu.id;
+			while (!inFile.eof()) {
+				LibStudent student;
+				char line[100];
+				inFile.getline(line, sizeof(line));
 
-	if (SearchStudent(&studentList, stu.id, stu)) {	
-		cout << "\nStudent found!\n";
-		stu.print(cout);	//Print the student information after return
-	}
-	else {
-		cout << "\nStudent with ID " << stu.id << " not found.\n\n";
-	}
+				if (strstr(line, "Student Id = ") != nullptr) {
+					sscanf(line, "Student Id = %s", student.id);
+					inFile.getline(line, sizeof(line)); // Read the name, Skip the line.
+					sscanf(line, "Name = %[^\n]", student.name);
+					inFile.getline(line, sizeof(line)); // Read the course.
+					sscanf(line, "course = %s", student.course);
+					inFile.getline(line, sizeof(line)); // Read the phone number.
+					sscanf(line, "Phone Number = %[^\n]", student.phone_no);
 
-	
-	//Law Wai CHun bool computeAndDisplayStatistics
-	//if user want to call this function, input their choice, then call this function
-		computeAndDisplayStatistics(&studentList);
+					// Assuming implemented here the code to populate the 'book' array.
 
+					studentList.insert(student);
+				}
+			}
 
-	cout << "\n\n";
-	system("pause");
-	return 0;
+			inFile.close();
+
+			// Search for a student in the linked list based on their id
+			cout << "Enter the Student ID to search: ";		//Ask the user to enter the student ID to be searched	
+			cin >> stu.id;
+
+			if (SearchStudent(&studentList, stu.id, stu)) {
+				cout << "\nStudent found!\n";
+				stu.print(cout);	//Print the student information after return
+			}
+			else {
+				cout << "\nStudent with ID " << stu.id << " not found.\n\n";
+			}
+		}
+		else if (choice == 4) {  //User enter 4 to INSERT BOOK
+			InsertBook(string, List*);
+		}
+		else if (choice == 5) {  //User enter 5 to DISPLAY OUTPUT
+			List studentList;
+			Display(list, source, detail);
+		}
+		else if (choice == 6) {  //User enter 6 to COMPUTE AND DISPLAY STATISTICS
+			//Law Wai CHun bool computeAndDisplayStatistics
+			//if user want to call this function, input their choice, then call this function
+			computeAndDisplayStatistics(&studentList);
+			cout << "\n\n";
+		}
+		else if (choice == 7) {  //User enter 7 to STUDENT WITH SAME BOOK
+			printStuWithSameBook(List*, char*);
+		}
+		else if (choice == 8) {  //User enter 8 to DISPLAY WARNED STUDENT
+			displayWarnedStudent(List*, List*, List*);
+		}
+		else if (choice == 9) {  //User enter 9 to EXIT
+			return 0;
+		}
+	} while (choice != 1 - 9);
+			cout << "Please enter your choice again (1 - 9): ";
+			cin >> choice;
+			return choice;
 }
 //Law Wai Chun SearchStudent function definition
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
@@ -238,4 +244,23 @@ bool computeAndDisplayStatistics(List* list) {
 		<< setw(28) << setprecision(2) << fixed << ctOverdueFine << endl;
 
 	return true;
+}
+
+//Lim Kai Xian's menu function
+int menu() {
+	int choice;
+	cout << "Menu\n";
+	cout << endl;
+	cout << "1. Read file." << endl;
+	cout << "2. Search student," << endl;
+	cout << "3. Search student." << endl;
+	cout << "4. Insert book." << endl;
+	cout << "5. Display output." << endl;
+	cout << "6. Compute and Display Statistics." << endl;
+	cout << "7. Student with Same Book." << endl;
+	cout << "8. Display Warned Student." << endl;
+	cout << "9. Exit." << endl;
+	cout << "Enter your choice: ";
+	cin >> choice;
+	return choice;
 }
