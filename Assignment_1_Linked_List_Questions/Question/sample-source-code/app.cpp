@@ -147,7 +147,37 @@ bool SearchStudent(List* list, char* id, LibStudent& stu) {
 	}
 	return false;
 }
+//Law Wai Chun extra function ReadStudentData
+// Function to read student data from the file and populate the list
+void ReadStudentData(List& studentList, const char* filename) {
+	ifstream inFile(filename);
+	if (!inFile) {
+		cout << "Error opening the file." << endl;
+		return;
+	}
 
+	while (!inFile.eof()) {
+		LibStudent student;
+		char line[100];
+		inFile.getline(line, sizeof(line));
+
+		if (strstr(line, "Student Id = ") != nullptr) {
+			sscanf(line, "Student Id = %s", student.id);
+			inFile.getline(line, sizeof(line)); // Read the name, Skip the line.
+			sscanf(line, "Name = %[^\n]", student.name);
+			inFile.getline(line, sizeof(line)); // Read the course.
+			sscanf(line, "course = %s", student.course);
+			inFile.getline(line, sizeof(line)); // Read the phone number.
+			sscanf(line, "Phone Number = %[^\n]", student.phone_no);
+
+			// Assuming implemented here the code to populate the 'book' array.
+
+			studentList.insert(student);
+		}
+	}
+
+	inFile.close();
+}
 
 
 bool DeleteRecord(List *, char *);
@@ -195,46 +225,20 @@ int main() {
 			//Law Wai Chun bool SearchStudent
 			List studentList; // Created a List object.
 			LibStudent stu;  // Return the student information using stu
-
-			// Reading student data from the "student.txt" file and populating the studentList.
-			ifstream inFile("student.txt");
-			if (!inFile) {
-				cout << "Error opening the file." << endl;
-				return 1;
-			}
-
-			while (!inFile.eof()) {
-				LibStudent student;
-				char line[100];
-				inFile.getline(line, sizeof(line));
-
-				if (strstr(line, "Student Id = ") != nullptr) {
-					sscanf(line, "Student Id = %s", student.id);
-					inFile.getline(line, sizeof(line)); // Read the name, Skip the line.
-					sscanf(line, "Name = %[^\n]", student.name);
-					inFile.getline(line, sizeof(line)); // Read the course.
-					sscanf(line, "course = %s", student.course);
-					inFile.getline(line, sizeof(line)); // Read the phone number.
-					sscanf(line, "Phone Number = %[^\n]", student.phone_no);
-
-					// Assuming implemented here the code to populate the 'book' array.
-
-					studentList.insert(student);
-				}
-			}
-
-			inFile.close();
+			const char* filename = "student.txt";
+			
+			ReadStudentData(studentList, filename); // Read student data from the file and populate the studentList.
 
 			// Search for a student in the linked list based on their id
-			cout << "Enter the Student ID to search: ";		//Ask the user to enter the student ID to be searched	
+			cout << "Enter the Student ID to search: "; // Ask the user to enter the student ID to be searched
 			cin >> stu.id;
 
-			if (SearchStudent(&studentList, stu.id, stu)) {
-				cout << "\nStudent found!\n";
-				stu.print(cout);	//Print the student information after return
+		if (SearchStudent(&studentList, stu.id, stu)) {
+			cout << "\nStudent found!\n";
+			stu.print(cout); // Print the student information after return
 			}
-			else {
-				cout << "\nStudent with ID " << stu.id << " not found.\n\n";
+		else {
+			cout << "\nStudent with ID " << stu.id << " not found.\n\n";
 			}
 		}
 		else if (choice == 4) {  //User enter 4 to INSERT BOOK
