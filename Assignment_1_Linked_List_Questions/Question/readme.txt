@@ -20,12 +20,12 @@ Tutor:
 
 Group Member 3:
 
-Name: 
-Student ID:
-Course:
-Practical Group: 
-Practical Session: 
-Tutor:
+Name: LIM KAI XIAN
+Student ID: 2207644
+Course: IA
+Practical Group: 1
+Practical Session: Monday, 12PM - 2PM
+Tutor: Mr. Sor Kean Vee
 
 
 Group Member 4:
