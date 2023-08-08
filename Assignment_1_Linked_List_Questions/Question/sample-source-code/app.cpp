@@ -198,7 +198,125 @@ void ReadStudentData(List& studentList, const char* filename) {
 	inFile.close();
 }
 
-bool Display(List, int, int);
+//Lim Kai Xian's Display function
+bool Display(List* list, int source, int detail) {
+	// Check if the list is empty
+	if (list->head == nullptr) {
+		cout << "List is empty." << endl;
+		return false;
+	}
+
+	// Check the output source
+	ofstream outputFile;
+	if (source == 1) {
+		outputFile.open("student_booklist.txt");
+		if (!outputFile.is_open()) {
+			cout << "Failed to open the output file." << endl;
+			return false;
+		}
+	}
+
+	// Traverse the list and print the details
+	Node* current = list->head;
+	while (current != nullptr) {
+		if (source == 1) {
+			outputFile << "STUDENT " << current << "\n\n";
+		}
+		else if (source == 2) {
+			cout << "STUDENT " << current << "\n\n";
+		}
+
+		// Print student information
+		if (detail == 1) {
+			if (source == 1) {
+				outputFile << "Name: " << current->item.name << "\n";
+				outputFile << "Id: " << current->item.id << "\n";
+				outputFile << "Course: " << current->item.course << "\n";
+				outputFile << "Phone No: " << current->item.phone_no << "\n";
+				outputFile << "Total Fine: RM" << current->item.total_fine << "\n\n";
+			}
+			else if (source == 2) {
+				cout << "Name: " << current->item.name << "\n";
+				cout << "Id: " << current->item.id << "\n";
+				cout << "Course: " << current->item.course << "\n";
+				cout << "Phone No: " << current->item.phone_no << "\n";
+				cout << "Total Fine: RM" << current->item.total_fine << "\n\n";
+			}
+		}
+		else if (detail == 2) {
+			if (source == 1) {
+				outputFile.open("student_list.txt");
+				outputFile << "Name: " << current->item.name << "\n";
+				outputFile << "Id: " << current->item.id << "\n";
+				outputFile << "Course: " << current->item.course << "\n";
+				outputFile << "Phone No: " << current->item.phone_no << "\n";
+				outputFile << "Total Fine: RM" << current->item.total_fine << "\n\n";
+				outputFile.close();
+			}
+			else if (source == 2) {
+				cout << "Name: " << current->item.name << "\n";
+				cout << "Id: " << current->item.id << "\n";
+				cout << "Course: " << current->item.course << "\n";
+				cout << "Phone No: " << current->item.phone_no << "\n";
+				cout << "Total Fine: RM" << current->item.total_fine << "\n\n";
+			}
+		}
+
+		// Print book information
+		if (detail == 1) {
+			if (source == 1) {
+				outputFile << "BOOK LIST: \n\n";
+			}
+			else if (source == 2) {
+				cout << "BOOK LIST: \n\n";
+			}
+
+			for (int i = 0; i < current->next; i++) {
+				LibBook book = current->item[i];
+				if (source == 1) {
+					outputFile << "Book " << i + 1 << "\n";
+					outputFile << "Title: " << book.title << "\n";
+					outputFile << "Author: " << book.author << "\n";
+					outputFile << "Publisher: " << book.publisher << "\n";
+					outputFile << "Year Published: " << book.yearPublished << "\n";
+					outputFile << "ISBN: " << book.ISBN << "\n";
+					outputFile << "Call Number: " << book.callNum << "\n";
+					outputFile << "Borrow Date: " << book.borrow << "\n";
+					outputFile << "Due Date: " << book.due << "\n";
+					outputFile << "Fine: RM" << book.fine << "\n\n";
+				}
+				else if (source == 2) {
+					cout << "Book " << i + 1 << "\n";
+					cout << "Title: " << book.title << "\n";
+					cout << "Author: " << book.author << "\n";
+					cout << "Publisher: " << book.publisher << "\n";
+					cout << "Year Published: " << book.yearPublished << "\n";
+					cout << "ISBN: " << book.ISBN << "\n";
+					cout << "Call Number: " << book.callNum << "\n";
+					cout << "Borrow Date: " << book.borrow << "\n";
+					cout << "Due Date: " << book.due << "\n";
+					cout << "Fine: RM" << book.fine << "\n\n";
+				}
+			}
+		}
+
+		if (source == 1) {
+			outputFile << "*****************************************************************************\n\n";
+		}
+		else if (source == 2) {
+			cout << "*****************************************************************************\n\n";
+		}
+
+		current = current->next;
+	}
+
+	if (source == 1) {
+		outputFile.close();
+	}
+
+	return true;
+}
+
 bool printStuWithSameBook(List *, char *);
 bool displayWarnedStudent(List *, List *, List *);
 
@@ -248,12 +366,12 @@ int main() {
 			// Search for a student in the linked list based on their id
 			cout << "Enter the Student ID to search: "; // Ask the user to enter the student ID to be searched
 			cin >> stu.id;
-
-		if (SearchStudent(&studentList, stu.id, stu)) {
-			cout << "\nStudent found!\n";
-			stu.print(cout); // Print the student information after return
+		
+			if (SearchStudent(&studentList, stu.id, stu)) {
+				cout << "\nStudent found!\n";
+				stu.print(cout); // Print the student information after return
 			}
-		else {
+			else {
 			cout << "\nStudent with ID " << stu.id << " not found.\n\n";
 			}
 		}
@@ -262,7 +380,26 @@ int main() {
 		}
 		else if (choice == 5) {  //User enter 5 to DISPLAY OUTPUT
 			List studentList;
-			Display(list, source, detail);
+			myList.head = nullptr;  // Initialize the list
+
+   			 // Populate the list with data (you should implement this part)
+
+   			 // Call Display function with desired parameters
+    			int source = 2;     // Display to screen
+   			int detail = 1;     // Display student and book info
+   			Display(&myList, source, detail);
+
+   			// Call print function
+    			source = 1;         // Display to file
+    			ofstream outputFile("student_booklist.txt");
+    			if (outputFile.is_open()) {
+        			print(osstream outputFile);
+        			outputFile.close();
+   			} else {
+        		cout << "Failed to open the output file." << endl;
+			}
+
+    			return 0;
 		}
 		else if (choice == 6) {  //User enter 6 to COMPUTE AND DISPLAY STATISTICS
 			//Law Wai CHun bool computeAndDisplayStatistics
