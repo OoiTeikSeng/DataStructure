@@ -13,50 +13,49 @@
 
 using namespace std;
 
-bool ReadFile(const std::string& filename, List& studentRecord, int lineNumber) {
-    ifstream file(filename);
+bool ReadFile(string filename, List* list){
+	LibStudent studentRecord;
+	ifstream inFile(filename);
 
-    if (!file.is_open()) {
-        cout << "Fail to open the file: " << filename << endl;
-        return false;
-    }
-    else {
-        string line;
-        int lineAmount = 1;
-
-        while (getline(file, line) && lineAmount <= lineNumber) {
-            LibStudent studentDetail;
-
-            // Parse the line and extract student details into studentDetail
-
-            // Check if the student details have been encountered before
-            Node* cur = studentRecord.head;  // Assuming the head member is public
-            bool isDuplicate = false;
-            while (cur != nullptr) {
-                if (cur->studentDetail == studentDetail) {
-                    cout << "Duplicate student details found at line " << lineNumber << ". Skipping." << endl;
-                    isDuplicate = true;
-                    break;
-                }
-                cur = cur->next;
-            }
-
-            if (!isDuplicate) {
-                // Insert the record into the list
-                if (!studentRecord.insert(1, studentDetail)) {
-                    cout << "Fail to insert student details from line " << lineNumber << " into the record." << endl;
-                    file.close();
-                    return false;
-                }
-            }
-
-            lineAmount++;
-        }
-        file.close();
-        cout << "Student details successfully recorded." << endl;
-        return true;
-    }
-}
+	if(!inFile) {
+		std::cout <<"Error opening file "<< filename <<endl;
+		return false;
+	}
+	string studID, studName, studCourse, studPhone;
+	string line;
+	int pos;
+	while(getline(inFile, line)) {
+		if (line.empty()) continue;
+		if (line[0] == 'I') {
+			pos = line.find('=');
+			studID = line.substr(pos + 2);
+			std::cout << studID <<endl;
+			strcpy(studentRecord.id, studID.c_str());
+		}
+		else if(line[0] == 'N'){
+			pos = line.find('=');
+			studName = line.substr(pos + 2);
+			strcpy(studentRecord.name, studName.c_str());
+		}
+		else if(line[0] == 'C'){
+			pos = line.find('=');
+			studCourse = line.substr(pos + 2);
+			strcpy(studentRecord.course, studCourse.c_str());
+		}
+		else if(line[0] == 'P'){
+			pos = line.find('=');
+			studPhone = line.substr(pos + 2);
+			strcpy(studentRecord.phone_no, studPhone.c_str());
+			bool successInsert = list->insert(studentRecord);
+			if (successInsert) {
+				std::cout << "Student " << studentRecord.name << " has been recorded" << endl;
+			}
+		}
+	} 
+	inFile.close();
+	std::cout << "Total recorded: " << list->count << endl;
+	return true;
+};
 
 // ng jian nian function to find and delete students based on student id
 bool DeleteRecord(List *list, char *student_id) {
