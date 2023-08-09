@@ -316,9 +316,124 @@ bool Display(List* list, int source, int detail) {
 
 	return true;
 }
+//Yong Xin Qi's printStuWithSameBook
+bool printStuWithSameBook(List* list, char* callNum) {
+    // Check if the list is empty
+ if (list->empty()) {
+        cout << "The list is empty." << endl;
+        return false;
+    }
 
-bool printStuWithSameBook(List *, char *);
-bool displayWarnedStudent(List *, List *, List *);
+    bool found = false;
+
+    Node* currentNode = list->head();
+    while (currentNode != nullptr) {
+        LibStudent student = currentNode->item;
+
+        // Assuming the student has a linked list of books they borrowed
+        // and each book has a member variable for call number and borrow date and due date.
+        Node* bookNode = student.book.head();
+        while (bookNode != nullptr) {
+            LibBook book = bookNode->item;
+
+            // Compare the call number of the book with the given callNum
+            if (strcmp(book.callNum, callNum) == 0) {
+                if (!found) {
+                    cout << "There are students who borrowed the book with call number " << callNum << " as shown below:" << endl;
+                    found = true;
+                }
+
+                cout << "Student Id: " << student.id << endl;
+                cout << "Name: " << student.name << endl;
+                cout << "Course: " << student.course << endl;
+                cout << "Phone Number: " << student.phone_no << endl;
+                cout << "Borrow Date: " << date.borrow << endl; // Assuming book.borrowDate contains borrow date
+                cout << "Due Date: " << date.due << endl; // Assuming book.dueDate contains due date
+                cout << endl;
+            }
+
+            bookNode = bookNode->next;
+        }
+
+        currentNode = currentNode->next;
+    }
+
+    if (!found) {
+        cout << "No student borrowed the book with call number " << callNum << "." << endl;
+    }
+
+    return true;
+}
+//Yong Xin Qi's displayWarnedStu
+bool displayWarnedStudent(List* list, List* type1, List* type2) {
+    // Check if the list is empty
+    if (list->empty()) {
+        cout << "The list is empty." << endl;
+        return false;
+    }
+
+    Node* currentNode = list->head();
+
+    while (currentNode != nullptr) {
+        LibStudent student = currentNode->item;
+        int overdueBooks = 0;
+        double totalFine = 0.0;
+
+        // Calculate the number of overdue books and total fine for the student
+        // Assuming you have a function to calculate overdue books and fine for each student, here's an example:
+        // You need to implement the function calculateOverdueBooksAndFine() in the LibStudent struct
+        // student.calculateOverdueBooksAndFine(overdueBooks, totalFine);
+
+        if (overdueBooks > 2 && totalFine > 50.0) {
+            // Copy the student to type1 list
+            type1->insert(student);
+        }
+        else if (overdueBooks == student.totalbook && totalFine > 50.0) {
+            // Copy the student to type2 list
+            type2->insert(student);
+        }
+
+        currentNode = currentNode->next;
+    }
+
+    // Display the students in type1 list with their book information
+    cout << "Type 1 Warning (More than 2 books overdue for >= 10 days):" << endl;
+    Node* type1Node = type1->head();
+    while (type1Node != nullptr) {
+        LibStudent student = type1Node->item;
+        cout << "Student ID: " << student.id << endl;
+        cout << "Name: " << student.name << endl;
+        cout << "Course: " << student.course << endl;
+        cout << "Phone Number: " << student.phone_no << endl;
+        // Display student book information
+        // Assuming you have a function to print student's book information, here's an example:
+        // You need to implement the function displayBooks() in the LibStudent struct
+        // student.displayBooks(cout);
+        cout << endl;
+
+        type1Node = type1Node->next;
+    }
+
+    // Display the students in type2 list with their book information
+    cout << "Type 2 Warning (Total fine > RM50.00 and every book is overdue):" << endl;
+    Node* type2Node = type2->head();
+    while (type2Node != nullptr) {
+        LibStudent student = type2Node->item;
+        cout << "Student ID: " << student.id << endl;
+        cout << "Name: " << student.name << endl;
+        cout << "Course: " << student.course << endl;
+        cout << "Phone Number: " << student.phone_no << endl;
+        // Display student book information
+        // Assuming you have a function to print student's book information, here's an example:
+        // You need to implement the function displayBooks() in the LibStudent struct
+        // student.displayBooks(cout);
+        cout << endl;
+
+        type2Node = type2Node->next;
+    }
+
+    return true;
+}
 
 //Lim Kai Xian's menu function
 int menu() {
