@@ -88,9 +88,10 @@ bool InsertBook(char *filename, LibStudent *student) {
     }
 //Law Wai Chun computeAndDisplayStatistics function definition
 bool computeAndDisplayStatistics(List* list) {
+	// Check if the list is empty
 	if (list->empty()) {
 		cout << "List is empty." << endl;
-		return false;	//return false for empty list
+		return false;    // Return false for an empty list
 	}
 
 	// Initialize variables to store statistics for each course.
@@ -102,34 +103,43 @@ bool computeAndDisplayStatistics(List* list) {
 	// Traverse the linked list to gather statistics for each course.
 	Node* current = list->head;
 	while (current != nullptr) {
+		int overdueBooks = 0;  // Initialize the count of overdue books for the current student
+
+		// Count the number of overdue books for the current student
+		for (int i = 0; i < current->item.totalbook; i++) {
+			if (current->item.book[i].fine > 0.0) {
+				overdueBooks++;
+			}
+		}
+		// Update the statistics based on the student's course and overdue books count
 		if (strcmp(current->item.course, "CS") == 0) {
 			csStudents++;
 			csBooks += current->item.totalbook;
-			csOverdueBooks += current->item.totalbook - current->item.total_fine;
+			csOverdueBooks += overdueBooks;
 			csOverdueFine += current->item.total_fine;
 		}
 		else if (strcmp(current->item.course, "IA") == 0) {
 			iaStudents++;
 			iaBooks += current->item.totalbook;
-			iaOverdueBooks += current->item.totalbook - current->item.total_fine;
+			iaOverdueBooks += overdueBooks;
 			iaOverdueFine += current->item.total_fine;
 		}
 		else if (strcmp(current->item.course, "IB") == 0) {
 			ibStudents++;
 			ibBooks += current->item.totalbook;
-			ibOverdueBooks += current->item.totalbook - current->item.total_fine;
+			ibOverdueBooks += overdueBooks;
 			ibOverdueFine += current->item.total_fine;
 		}
 		else if (strcmp(current->item.course, "CN") == 0) {
 			cnStudents++;
 			cnBooks += current->item.totalbook;
-			cnOverdueBooks += current->item.totalbook - current->item.total_fine;
+			cnOverdueBooks += overdueBooks;
 			cnOverdueFine += current->item.total_fine;
 		}
 		else if (strcmp(current->item.course, "CT") == 0) {
 			ctStudents++;
 			ctBooks += current->item.totalbook;
-			ctOverdueBooks += current->item.totalbook - current->item.total_fine;
+			ctOverdueBooks += overdueBooks;
 			ctOverdueFine += current->item.total_fine;
 		}
 
@@ -159,16 +169,19 @@ bool computeAndDisplayStatistics(List* list) {
 }
 
 //Law Wai Chun SearchStudent function definition
+// Function to search for a student in the list by their ID
 bool SearchStudent(List* list, char* id, LibStudent& stu) {
 	Node* current = list->head;
 	while (current != nullptr) {
-		if (strcmp(current->item.id, id) == 0) {	//If found, return true
-			stu = current->item;	 //return the student information using stu
-			return true;
+		// Compare the current student's ID with the target ID
+		if (strcmp(current->item.id, id) == 0) {
+			// If found, store the student's information in the provided stu parameter
+			stu = current->item;
+			return true;	// Return true to indicate successful search
 		}
-		current = current->next;
+		current = current->next;	// Move to the next node in the list
 	}
-	return false;
+	return false;	// Return false if the student with the given ID was not found
 }
 //Law Wai Chun extra function ReadStudentData
 // Function to read student data from the file and populate the list
@@ -179,29 +192,78 @@ void ReadStudentData(List& studentList, const char* filename) {
 		return;
 	}
 
+	bool inBookList = false; // Flag to indicate whether you're inside a student's book list
+	LibStudent student; // Current student being populated
+
 	while (!inFile.eof()) {
-		LibStudent student;
 		char line[100];
 		inFile.getline(line, sizeof(line));
 
-		if (strstr(line, "Student Id = ") != nullptr) {
-			sscanf(line, "Student Id = %s", student.id);
-			inFile.getline(line, sizeof(line)); // Read the name, Skip the line.
-			sscanf(line, "Name = %[^\n]", student.name);
-			inFile.getline(line, sizeof(line)); // Read the course.
-			sscanf(line, "course = %s", student.course);
-			inFile.getline(line, sizeof(line)); // Read the phone number.
-			sscanf(line, "Phone Number = %[^\n]", student.phone_no);
-
-			// Assuming implemented here the code to populate the 'book' array.
-
-			studentList.insert(student);
+		// Check for STUDENT tag to start parsing a new student's data
+		if (strstr(line, "STUDENT") != nullptr) {
+			if (student.totalbook > 0) {
+				studentList.insert(student); // Insert the populated student into the list
+			}
+			inBookList = false; // Reset the inBookList flag
+			student = LibStudent(); // Reset the student object
 		}
+
+		// Parse student's data from different lines
+		if (strstr(line, "Name:") != nullptr) {
+			sscanf(line, "Name: %[^\n]", student.name);
+		}
+		else if (strstr(line, "Id:") != nullptr) {
+			sscanf(line, "Id: %s", student.id);
+		}
+		else if (strstr(line, "Course:") != nullptr) {
+			sscanf(line, "Course: %s", student.course);
+		}
+		else if (strstr(line, "Phone No:") != nullptr) {
+			sscanf(line, "Phone No: %[^\n]", student.phone_no);
+		}
+		else if (strstr(line, "Total Fine:") != nullptr) {
+			double totalFine;
+			sscanf(line, "Total Fine: RM%lf", &totalFine);
+			student.total_fine = totalFine;
+		}
+
+		// Check for BOOK LIST tag to start parsing a student's book list
+		else if (strstr(line, "BOOK LIST:") != nullptr) {
+			inBookList = true; // Set the inBookList flag to true
+			student.totalbook = 0; // Reset the totalbook count for the current student
+		}
+
+		// Parse book data if inBookList flag is true
+		else if (inBookList && strstr(line, "Title:") != nullptr) {
+			LibBook book;
+
+			// ... Skipping other book data parsing ...
+			inFile.getline(line, sizeof(line)); // Read Title
+			inFile.getline(line, sizeof(line)); // Read Author(s)
+			inFile.getline(line, sizeof(line)); // Read Publisher
+			inFile.getline(line, sizeof(line)); // Read Year Published
+			inFile.getline(line, sizeof(line)); // Read ISBN
+			inFile.getline(line, sizeof(line)); // Read Call Number
+			inFile.getline(line, sizeof(line)); // Read Borrow Date
+			inFile.getline(line, sizeof(line)); // Read Due Date
+
+			// Parse fine amount
+			double fineAmount;
+			sscanf(line, "Fine: RM%lf", &fineAmount);
+			book.fine = fineAmount;
+
+			// Now add the populated book to the student's book array
+			student.book[student.totalbook] = book;
+			student.totalbook++;
+		}
+	}
+	// Insert the last student outside the loop
+	if (student.totalbook > 0) {
+		studentList.insert(student);
 	}
 
 	inFile.close();
 }
-
 //Lim Kai Xian's Display function
 bool Display(List* list, int source, int detail) {
 	// Check if the list is empty
@@ -471,23 +533,26 @@ int main() {
 		}
 		else if (choice == 3) {  //User enter 3 to SEARCH STUDENT
 			//Law Wai Chun bool SearchStudent
-			List studentList; // Created a List object.
-			LibStudent stu;  // Return the student information using stu
-			const char* filename = "student.txt";
-			
-			ReadStudentData(studentList, filename); // Read student data from the file and populate the studentList.
+			List studentList;	// Create a List object to store student data.
+	LibStudent stu;		// A variable to hold the student information after search which is stu
+	const char* filename = "student_booklist.txt";		// Change to the correct filename
 
-			// Search for a student in the linked list based on their id
-			cout << "Enter the Student ID to search: "; // Ask the user to enter the student ID to be searched
-			cin >> stu.id;
-		
-			if (SearchStudent(&studentList, stu.id, stu)) {
-				cout << "\nStudent found!\n";
-				stu.print(cout); // Print the student information after return
-			}
-			else {
-			cout << "\nStudent with ID " << stu.id << " not found.\n\n";
-			}
+	// Read student data from the file and populate the studentList.
+	ReadStudentData(studentList, filename);
+
+	// Ask the user to enter the student ID for searching.
+	cout << "Enter the Student ID to search: ";
+	cin >> stu.id;
+
+	// Search for the student with the entered ID in the linked list.
+	if (SearchStudent(&studentList, stu.id, stu)) {
+		cout << "\nStudent found!\n";
+		stu.print(cout); // Print the student information after finding.
+		cout << "\n\n"; // Add some space for better readability
+	}
+	else {
+		cout << "\nStudent with ID " << stu.id << " not found.\n\n";
+	}
 		}
 		else if (choice == 4) {  //User enter 4 to INSERT BOOK
 			InsertBook(string, List*);
@@ -517,9 +582,8 @@ int main() {
 		}
 		else if (choice == 6) {  //User enter 6 to COMPUTE AND DISPLAY STATISTICS
 			//Law Wai CHun bool computeAndDisplayStatistics
-			//if user want to call this function, input their choice, then call this function
-			computeAndDisplayStatistics(&studentList);
-			cout << "\n\n";
+			computeAndDisplayStatistics(&studentList);	// Call the function to compute and display statistics
+			cout << "\n\n"; // Add some space for better readability
 		}
 		else if (choice == 7) {  //User enter 7 to STUDENT WITH SAME BOOK
 			printStuWithSameBook(List*, char*);
