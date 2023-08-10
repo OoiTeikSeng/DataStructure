@@ -316,26 +316,22 @@ bool Display(List* list, int source, int detail) {
 	return true;
 }
 //Yong Xin Qi's printStuWithSameBook
-bool printStuWithSameBook(List* list, char* callNum) {
+bool printStuWithSameBook(List* list, const char* callNum) {
     // Check if the list is empty
- if (list->empty()) {
+    if (list->empty()) {
         cout << "The list is empty." << endl;
         return false;
     }
 
     bool found = false;
 
-    Node* currentNode = list->head();
+    Node* currentNode = list->head(0, LibStudent()); // Adjust the argument based on your implementation
     while (currentNode != nullptr) {
         LibStudent student = currentNode->item;
 
-        // Assuming the student has a linked list of books they borrowed
-        // and each book has a member variable for call number and borrow date and due date.
-        Node* bookNode = student.book.head();
-        while (bookNode != nullptr) {
-            LibBook book = bookNode->item;
+        for (int i = 0; i < student.totalbook; ++i) {
+            LibBook book = student.book[i];
 
-            // Compare the call number of the book with the given callNum
             if (strcmp(book.callNum, callNum) == 0) {
                 if (!found) {
                     cout << "There are students who borrowed the book with call number " << callNum << " as shown below:" << endl;
@@ -346,12 +342,10 @@ bool printStuWithSameBook(List* list, char* callNum) {
                 cout << "Name: " << student.name << endl;
                 cout << "Course: " << student.course << endl;
                 cout << "Phone Number: " << student.phone_no << endl;
-                cout << "Borrow Date: " << date.borrow << endl; // Assuming book.borrowDate contains borrow date
-                cout << "Due Date: " << date.due << endl; // Assuming book.dueDate contains due date
+                cout << "Borrow Date: " << book.borrow.day << "/" << book.borrow.month << "/" << book.borrow.year << endl;
+                cout << "Due Date: " << book.due.day << "/" << book.due.month << "/" << book.due.year << endl;
                 cout << endl;
             }
-
-            bookNode = bookNode->next;
         }
 
         currentNode = currentNode->next;
@@ -363,6 +357,7 @@ bool printStuWithSameBook(List* list, char* callNum) {
 
     return true;
 }
+
 //Yong Xin Qi's displayWarnedStu
 bool displayWarnedStudent(List* list, List* type1, List* type2) {
     // Check if the list is empty
@@ -371,7 +366,7 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
         return false;
     }
 
-    Node* currentNode = list->head();
+    Node* currentNode = list->head(0, LibStudent());
 
     while (currentNode != nullptr) {
         LibStudent student = currentNode->item;
@@ -397,7 +392,7 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 
     // Display the students in type1 list with their book information
     cout << "Type 1 Warning (More than 2 books overdue for >= 10 days):" << endl;
-    Node* type1Node = type1->head();
+    Node* type1Node = type1->head(0, LibStudent());
     while (type1Node != nullptr) {
         LibStudent student = type1Node->item;
         cout << "Student ID: " << student.id << endl;
@@ -415,7 +410,7 @@ bool displayWarnedStudent(List* list, List* type1, List* type2) {
 
     // Display the students in type2 list with their book information
     cout << "Type 2 Warning (Total fine > RM50.00 and every book is overdue):" << endl;
-    Node* type2Node = type2->head();
+    Node* type2Node = type2->head(0, LibStudent());
     while (type2Node != nullptr) {
         LibStudent student = type2Node->item;
         cout << "Student ID: " << student.id << endl;
