@@ -187,8 +187,8 @@ bool Display(List* list, int source, int detail) {
 					outputFile << "Year Published: " << book.yearPublished << "\n";
 					outputFile << "ISBN: " << book.ISBN << "\n";
 					outputFile << "Call Number: " << book.callNum << "\n";
-					//outputFile << "Borrow Date: " << book.borrow << "\n";
-					//outputFile << "Due Date: " << book.due << "\n";
+					//outputFile << "Borrow Date: " << book.borrow.day << "/" << book.borrow.month << "/" << book.borrow.year << "\n";
+					//outputFile << "Due Date: " << book.due.day << "/" << book.due.month << "/" book.due.year << "\n";
 					outputFile << "Fine: RM" << book.fine << "\n\n";
 				}
 				else if (source == 2) {
@@ -199,8 +199,8 @@ bool Display(List* list, int source, int detail) {
 					cout << "Year Published: " << book.yearPublished << "\n";
 					cout << "ISBN: " << book.ISBN << "\n";
 					cout << "Call Number: " << book.callNum << "\n";
-					//cout << "Borrow Date: " << book.borrow << "\n";
-					//cout << "Due Date: " << book.due << "\n";
+					//cout << "Borrow Date: " << book.borrow.day << "/" << book.borrow.month << "/" << book.borrow.year << "\n";
+					//cout << "Due Date: " << book.due.day << "/" << book.due.month << "/" book.due.year << "\n";
 					cout << "Fine: RM" << book.fine << "\n\n";
 				}
 			}
