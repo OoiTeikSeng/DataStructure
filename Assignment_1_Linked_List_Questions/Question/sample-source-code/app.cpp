@@ -572,7 +572,7 @@ int main() {
     			source = 1;         // Display to file
     			ofstream outputFile("student_booklist.txt");
     			if (outputFile.is_open()) {
-        			print(osstream outputFile);
+        			print(osstream "student_booklist.txt');
         			outputFile.close();
    			} else {
         		cout << "Failed to open the output file." << endl;
