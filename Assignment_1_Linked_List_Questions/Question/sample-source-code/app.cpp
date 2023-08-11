@@ -81,93 +81,138 @@ bool DeleteRecord(List* list, char* student_id) {
 }
 
 bool InsertBook(string filename, List* list) {
-	FILE* file = fopen(filename, "student_booklist.txt");
-	if (file == NULL) {
-		// Handle file open errors
+	LibBook book;               //temporary LibBook storage
+	ifstream inFile(filename);
+	if (!inFile) {
+		cout << "File can't be opened. Please try again." << endl;
 		return false;
 	}
-	//Law Wai Chun computeAndDisplayStatistics function definition
-	bool computeAndDisplayStatistics(List * list) {
-		// Check if the list is empty
-		if (list->empty()) {
-			cout << "List is empty." << endl;
-			return false;    // Return false for an empty list
+
+	char stuID[10];
+	string line, author, title, publisher, ISBN, publishedYear, callNum, borrowDate, dueDate;
+	while (inFile >> stuID) {
+		string tempAuthor;
+		inFile >> author;
+		inFile >> title;
+		inFile >> publisher;
+		inFile >> ISBN;
+		inFile >> publishedYear;
+		inFile >> callNum;
+		inFile >> borrowDate;
+		inFile >> dueDate;
+		for (int i = 0; i < title.length(); i++) {
+			if (title[i] == '_') {
+				title[i] = ' ';
+			}
+		}
+		for (int i = 0; i < author.length(); i++) {
+			if (author[i] == '_') {
+				author[i] = ' ';
+			}
 		}
 
-		// Initialize variables to store statistics for each course.
-		int csStudents = 0, iaStudents = 0, ibStudents = 0, cnStudents = 0, ctStudents = 0;
-		int csBooks = 0, iaBooks = 0, ibBooks = 0, cnBooks = 0, ctBooks = 0;
-		int csOverdueBooks = 0, iaOverdueBooks = 0, ibOverdueBooks = 0, cnOverdueBooks = 0, ctOverdueBooks = 0;
-		double csOverdueFine = 0.0, iaOverdueFine = 0.0, ibOverdueFine = 0.0, cnOverdueFine = 0.0, ctOverdueFine = 0.0;
+		int startPos = 0, endPos = 0;
+		endPos = author.find('/');
+		int authorCount = 0;
 
-		// Traverse the linked list to gather statistics for each course.
-		Node* current = list->head;
-		while (current != nullptr) {
-			int overdueBooks = 0;  // Initialize the count of overdue books for the current student
+		while (endPos != string::npos) {
+			book.author[authorCount] = new char[strlen(author.substr(startPos, endPos - startPos).c_str()) + 1];
+			strcpy(book.author[authorCount], author.substr(startPos, endPos - startPos).c_str());
+			startPos = endPos + 1;
+			endPos = author.find('/', startPos);
+			authorCount++;
+		}
+		if (authorCount == 0) {
+			book.author[0] = new char[strlen(author.c_str()) + 1];
+			strcpy(book.author[0], author.c_str());
+			authorCount++;
+		}
+		else {
+			book.author[authorCount] = new char[strlen(author.substr(startPos).c_str()) + 1];
+			strcpy(book.author[authorCount], author.substr(startPos).c_str());
+			authorCount++;
+		}
+		int borrowDay, borrowMonth, borrowYear, pos1, pos2;
+		int dueDay, dueMonth, dueYear;
+		//Date borrow function
+		pos1 = borrowDate.find('/');
+		pos2 = borrowDate.find('/', pos1 + 1);
+		borrowDay = stoi(borrowDate.substr(0, pos1));
+		borrowMonth = stoi(borrowDate.substr(pos1 + 1, pos2 - pos1 - 1));
+		borrowYear = stoi(borrowDate.substr(pos2 + 1));
+		book.borrow.day = borrowDay;
+		book.borrow.month = borrowMonth;
+		book.borrow.year = borrowYear;
 
-			// Count the number of overdue books for the current student
-			for (int i = 0; i < current->item.totalbook; i++) {
-				if (current->item.book[i].fine > 0.0) {
-					overdueBooks++;
+		//Date due function
+		pos1 = dueDate.find('/');
+		pos2 = dueDate.find('/', pos1 + 1);
+		dueDay = stoi(dueDate.substr(0, pos1));
+		dueMonth = stoi(dueDate.substr(pos1 + 1, pos2 - pos1 - 1));
+		dueYear = stoi(dueDate.substr(pos2 + 1));
+		book.due.day = dueDay;
+		book.due.month = dueMonth;
+		book.due.year = dueYear;
+
+
+		double fine;
+		if (book.due.month < 3 && book.due.day < 29) {
+			fine = (29 - book.due.day) * 0.50;
+			fine = fine + (29 * 0.50);
+			book.fine = fine;
+		}
+
+		else if (book.due.day <= 29 && book.due.month == 3)
+		{
+			fine = (29 - book.due.day) * 0.50;
+			book.fine = fine;
+		}
+
+		else {
+			book.fine = 0;
+		}
+
+
+		strcpy(book.title, title.c_str());
+		strcpy(book.publisher, publisher.c_str());
+		strcpy(book.ISBN, ISBN.c_str());
+		book.yearPublished = stoi(publishedYear);
+		strcpy(book.callNum, callNum.c_str());
+
+		Node* cur;
+		cur = list->head;
+		for (int i = 1; i <= list->size(); i++) {
+
+			if (strcmp(stuID, cur->item.id) == 0) {
+				int bookCount = cur->item.totalbook;
+				for (int i = 0; i < authorCount; i++) {
+					cur->item.book[bookCount].author[i] = new char[strlen(book.author[i])];
+					strcpy(cur->item.book[bookCount].author[i], book.author[i]);
 				}
+				strcpy(cur->item.book[bookCount].title, book.title);
+				strcpy(cur->item.book[bookCount].publisher, book.publisher);
+				strcpy(cur->item.book[bookCount].ISBN, book.ISBN);
+				strcpy(cur->item.book[bookCount].callNum, book.callNum);
+				cur->item.book[bookCount].borrow.day = book.borrow.day;
+				cur->item.book[bookCount].borrow.month = book.borrow.month;
+				cur->item.book[bookCount].borrow.year = book.borrow.year;
+				cur->item.book[bookCount].due.day = book.due.day;
+				cur->item.book[bookCount].due.month = book.due.month;
+				cur->item.book[bookCount].due.year = book.due.year;
+				cur->item.book[bookCount].fine = book.fine;
+				cur->item.totalbook += 1;
+				cur->item.calculateTotalFine();
+				break;              //found correct student then break; 
 			}
-			// Update the statistics based on the student's course and overdue books count
-			if (strcmp(current->item.course, "CS") == 0) {
-				csStudents++;
-				csBooks += current->item.totalbook;
-				csOverdueBooks += overdueBooks;
-				csOverdueFine += current->item.total_fine;
+			else {
+				cur = cur->next;
 			}
-			else if (strcmp(current->item.course, "IA") == 0) {
-				iaStudents++;
-				iaBooks += current->item.totalbook;
-				iaOverdueBooks += overdueBooks;
-				iaOverdueFine += current->item.total_fine;
-			}
-			else if (strcmp(current->item.course, "IB") == 0) {
-				ibStudents++;
-				ibBooks += current->item.totalbook;
-				ibOverdueBooks += overdueBooks;
-				ibOverdueFine += current->item.total_fine;
-			}
-			else if (strcmp(current->item.course, "CN") == 0) {
-				cnStudents++;
-				cnBooks += current->item.totalbook;
-				cnOverdueBooks += overdueBooks;
-				cnOverdueFine += current->item.total_fine;
-			}
-			else if (strcmp(current->item.course, "CT") == 0) {
-				ctStudents++;
-				ctBooks += current->item.totalbook;
-				ctOverdueBooks += overdueBooks;
-				ctOverdueFine += current->item.total_fine;
-			}
-
-			current = current->next;
 		}
-
-		// Print the statistics in table format.
-		cout << left << setw(10) << "Course" << setw(20) << "Number of Students" << setw(23) << "Total Books Borrowed"
-			<< setw(23) << "Total Overdue Books" << setw(25) << "Total Overdue Fine (RM)" << endl;
-
-		cout << right << setw(4) << "CS" << setw(15) << csStudents << setw(22) << csBooks << setw(21) << csOverdueBooks
-			<< setw(28) << setprecision(2) << fixed << csOverdueFine << endl;
-
-		cout << right << setw(4) << "IA" << setw(15) << iaStudents << setw(22) << iaBooks << setw(21) << iaOverdueBooks
-			<< setw(28) << setprecision(2) << fixed << iaOverdueFine << endl;
-
-		cout << right << setw(4) << "IB" << setw(15) << ibStudents << setw(22) << ibBooks << setw(21) << ibOverdueBooks
-			<< setw(28) << setprecision(2) << fixed << ibOverdueFine << endl;
-
-		cout << right << setw(4) << "CN" << setw(15) << cnStudents << setw(22) << cnBooks << setw(21) << cnOverdueBooks
-			<< setw(28) << setprecision(2) << fixed << cnOverdueFine << endl;
-
-		cout << right << setw(4) << "CT" << setw(15) << ctStudents << setw(22) << ctBooks << setw(21) << ctOverdueBooks
-			<< setw(28) << setprecision(2) << fixed << ctOverdueFine << endl;
-
-		return true;
 	}
-
+	inFile.close();
+	cout << "Books inserted successfully to student list." << endl;
+	return true;
+}
 	//Law Wai Chun SearchStudent function definition
 	// Function to search for a student in the list by their ID
 	bool SearchStudent(List * list, char* id, LibStudent & stu) {
@@ -517,10 +562,9 @@ bool InsertBook(string filename, List* list) {
 			choice = menu();
 
 			if (choice == 1) {  //User enter 1 to READ FILE
-				List LibStudent;
-
-				string filename = "student.txt";
-				ReadFile("student.txt", LibStudent, 4);
+				//User enter 1 to read student.txt to enter into list
+				//Ooi Teik Seng bool ReadFile
+			bool successRead = ReadFile("student.txt", &studentList);
 			}
 			else if (choice == 2) {  //User enter 2 to DELETE RECORD
 				DeleteRecord(LibStudent, 4);
@@ -549,7 +593,7 @@ bool InsertBook(string filename, List* list) {
 				}
 			}
 			else if (choice == 4) {  //User enter 4 to INSERT BOOK
-				InsertBook(string, List*);
+				InsertBook("book.txt", &studentList);
 			}
 			else if (choice == 5) {  //User enter 5 to DISPLAY OUTPUT
 				List studentList;
