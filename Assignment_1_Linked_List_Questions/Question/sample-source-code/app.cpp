@@ -517,6 +517,7 @@ int menu() {
 
 
 int main() {
+        List studentList;
 	int choice;
 
 	do {
@@ -585,12 +586,15 @@ int main() {
 			computeAndDisplayStatistics(&studentList);	// Call the function to compute and display statistics
 			cout << "\n\n"; // Add some space for better readability
 		}
-		else if (choice == 7) {  //User enter 7 to STUDENT WITH SAME BOOK
-			printStuWithSameBook(List*, char*);
-		}
-		else if (choice == 8) {  //User enter 8 to DISPLAY WARNED STUDENT
-			displayWarnedStudent(List*, List*, List*);
-		}
+		else if (choice == 7) {
+                        const char* callNum = "QA76.73.C153S26"; // Replace with desired call number
+                        printStuWithSameBook(&studentList, callNum);
+                }
+               else if (choice == 8) {
+                        List type1List;
+                        List type2List;
+                        displayWarnedStudent(&studentList, &type1List, &type2List);
+                }
 		else if (choice == 9) {  //User enter 9 to EXIT
 			return 0;
 		}
