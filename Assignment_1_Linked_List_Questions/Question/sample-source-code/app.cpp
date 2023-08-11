@@ -429,7 +429,7 @@ bool InsertBook(string filename, List* list) {
 		return true;
 	}
 	//Yong Xin Qi's printStuWithSameBook
-	bool printStuWithSameBook(List * list, const char* callNum) {
+bool printStuWithSameBook(List * list, const char* callNum) {
 		// Check if the list is empty
 		if (list->empty()) {
 			cout << "The list is empty." << endl;
@@ -479,15 +479,17 @@ bool InsertBook(string filename, List* list) {
 			return false;
 		}
 
-		for (const LibStudent& student : *list) {
+		Node* currentNode = list->head(0,LibStudent());
+		while (currentNode != nullptr) {
+			LibStudent student = currentNode->item;
 			int overdueBooks = 0;
 			double totalFine = 0.0;
 
 			// Calculate the number of overdue books and total fine for the student
 			// Assuming you have a function to calculate overdue books and fine for each student, here's an example:
 			// You need to implement the function calculateOverdueBooksAndFine() in the LibStudent struct
-			// student.calculateOverdueBooksAndFine(overdueBooks, totalFine);
-
+			 student.calculateTotalFine();
+			 
 			if (overdueBooks > 2 && totalFine > 50.0) {
 				// Copy the student to type1 list
 				type1->insert(student);
@@ -502,28 +504,42 @@ bool InsertBook(string filename, List* list) {
 
 		// Display the students in type1 list with their book information
 		cout << "Type 1 Warning (More than 2 books overdue for >= 10 days):" << endl;
-		for (const LibStudent& student : *type1) {
+		Node* type1Node = type1->head(0, LibStudent());
+		while (type1Node != nullptr) {
 			LibStudent student = type1Node->item;
 			cout << "Student ID: " << student.id << endl;
 			cout << "Name: " << student.name << endl;
 			cout << "Course: " << student.course << endl;
 			cout << "Phone Number: " << student.phone_no << endl;
-			student.displayBooks(cout); // Display student book information
-			cout << endl;
+			int overdueBooks = 0;
+			double totalFine = 0.0;
+			cout << "Overdue Books:" << overdueBooks << endl; // Display overdue book count
+			cout << "Total Fine: RM" << setprecision(2) << fixed << totalFine << endl; // Display total fine
+
+			cout << "Books Borrowed:" << endl;
+			for (int i = 0; i < student.totalbook; ++i) {
+				student.book[i].print(cout); // Display book details, including due date
+				cout << endl;
 
 			type1Node = type1Node->next;
 		}
 
 		// Display the students in type2 list with their book information
 		cout << "Type 2 Warning (Total fine > RM50.00 and every book is overdue):" << endl;
-		for (const LibStudent& student : *type2) {
+		Node* type2Node = type2->head(0, LibStudent());
+		while (type2Node != nullptr) {
 			LibStudent student = type2Node->item;
 			cout << "Student ID: " << student.id << endl;
 			cout << "Name: " << student.name << endl;
 			cout << "Course: " << student.course << endl;
 			cout << "Phone Number: " << student.phone_no << endl;
-			student.displayBooks(cout); // Display student book information
-			cout << endl;
+			cout << "Overdue Books:" << overdueBooks << endl; // Display overdue book count
+			cout << "Total Fine: RM" << setprecision(2) << fixed << totalFine << endl; // Display total fine
+
+			cout << "Books Borrowed:" << endl;
+			for (int i = 0; i < student.totalbook; ++i) {
+				student.book[i].print(cout); // Display book details, including due date
+				cout << endl;
 
 			type2Node = type2Node->next;
 		}
