@@ -84,7 +84,7 @@ bool isEmpty(List* list) {
 	return list->count == 0;
 }
 bool DeleteRecord(List* list, char* student_id) {
-	if (isEmpty(list)) {
+	/*if (isEmpty(list)) {
 		return false; // list is empty
 	}
 	// ng jian nian function to find borrowed due date
@@ -100,7 +100,7 @@ bool DeleteRecord(List* list, char* student_id) {
 			return true; // Delete successful
 		}
 	}
-
+*/
 	return false; // Student not found
 }
 
