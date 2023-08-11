@@ -58,8 +58,8 @@ bool ReadFile(string filename, List* list) {
 };
 
 // ng jian nian function to find and delete students based on student id
-void deleteStudent(List* list, int index);
-bool isEmpty(List* list);
+
+bool isEmpty(List* );
 bool isEmpty(List* list) {
 	return list->count == 0;
 }
@@ -69,7 +69,7 @@ bool DeleteRecord(List* list, char* student_id) {
 	}
 	// ng jian nian function to find borrowed due date
 	for (int i = 1; i <= list->count; i++) {
-		student* student = &list->find(i)->item; // this line needs to be fixed
+		LibStudent* LibStudent = &list->find(i)->item; // this line needs to be fixed
 
 		if (strcmp(student_id, student->id) == 0) {
 			deleteStudent(list, i);
@@ -80,8 +80,8 @@ bool DeleteRecord(List* list, char* student_id) {
 	return false; // no student found
 }
 
-bool InsertBook(char* filename, LibStudent* student) {
-	FILE* file = fopen(student_booklist.txt, "r");
+bool InsertBook(string filename, List* list) {
+	FILE* file = fopen(filename, "student_booklist.txt");
 	if (file == NULL) {
 		// Handle file open errors
 		return false;
