@@ -58,7 +58,8 @@ bool ReadFile(string filename, List* list) {
 };
 
 // ng jian nian function to find and delete students based on student id
-
+void deleteStudent(List*, int)
+void deleteStudent(List*list, int index);
 bool isEmpty(List* );
 bool isEmpty(List* list) {
 	return list->count == 0;
