@@ -566,8 +566,16 @@ bool InsertBook(string filename, List* list) {
 				//Ooi Teik Seng bool ReadFile
 			bool successRead = ReadFile("student.txt", &studentList);
 			}
-			else if (choice == 2) {  //User enter 2 to DELETE RECORD
-				DeleteRecord(LibStudent, 4);
+			else if (choice == 2) { // Delete Student
+            char student_id[10];
+            std::cout << "Enter student ID to delete: ";
+            std::cin >> student_id;
+            bool deleted = DeleteRecord(&list, student_id);
+            if (deleted) {
+                std::cout << "Student with ID " << student_id << " deleted." << std::endl;
+            } else {
+                std::cout << "Student with ID " << student_id << " not found." << std::endl;
+				
 			}
 			else if (choice == 3) {  //User enter 3 to SEARCH STUDENT
 				//Law Wai Chun bool SearchStudent
